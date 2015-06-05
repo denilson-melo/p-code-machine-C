@@ -7,24 +7,39 @@
 #define ERROR_UNKNOWN_OPERATION 3
 
 #define MAX_INSTRUCTIONS 1024
+#define STACK_SIZE 1024
 
 
 FILE *fp;
+int codeLines;
 void parseFile();
+void run();
 void error(int);
+int getOperationCode(char *);
+char * getOperationName(int);
+void printInstructions();
+void executeInstruction();
 
 struct instruction{
     int operation;
     int level;
     int argument;
 };
-struct instruction instructions[MAX_INSTRUCTIONS];
-enum { LIT, OPR } operationCode;
-int getOperationCode(char *);
-char * getOperationName(int);
 
-int codeLines;
-void printInstructions();
+enum { LIT, OPR, STO, INT } operationCode;
+
+//Stack
+int stack[STACK_SIZE];
+
+//Registers
+int base = 1;
+int stackTop = 0;
+int programCounter = 0;
+struct instruction instructionRegister;
+
+//Instructions
+struct instruction instructions[MAX_INSTRUCTIONS];
+
 
 int main(int argc, char ** argv){
     
@@ -43,10 +58,57 @@ int main(int argc, char ** argv){
     parseFile();
     printf(" Success.\n");
     printInstructions();
-    
+    run();
+    printf("Stack top: %d\n", stack[1]);
     return 0;
 }
 
+void run(){
+    stack[1] = stack[2] = stack[3] = 0;
+    
+    while ( base > 0 ){
+        executeInstruction();
+    }
+}
+
+void executeInstruction(){
+    instructionRegister = instructions[programCounter];
+    programCounter++;
+    switch ( instructionRegister.operation ){
+        case LIT:
+            stackTop++;
+            stack[stackTop] = instructionRegister.argument;
+            break;
+        case OPR:
+            switch(instructionRegister.argument){
+                case 0: //RTN
+                    stackTop = base - 1;
+                    programCounter = stack[stackTop+3];
+                    base = stack[stackTop+2];
+                case 2: //ADD
+                    stackTop--;
+                    stack[stackTop] += stack[stackTop+1];
+            }
+            break;
+        case STO:
+            stack[ getBase(instructionRegister.level) + instructionRegister.argument ] = stack[stackTop];
+            stackTop--;
+            break;
+        case INT:
+            stackTop += instructionRegister.argument;
+            break;
+    }
+}
+
+int getBase(int level){
+    int newBase;
+    newBase = base;
+    while ( level>0 ){
+        newBase = stack[newBase];
+        level--;
+    }
+    return newBase;
+}
 
 void parseFile(){
     char foperation[4];
@@ -71,6 +133,12 @@ int getOperationCode(char *str){
     if ( strcmp(str,"OPR")==0 ){
         return OPR;
     }
+    if ( strcmp(str,"STO")==0 ){
+        return STO;
+    }
+    if ( strcmp(str,"INT")==0 ){
+        return STO;
+    }
     error(ERROR_UNKNOWN_OPERATION);
     return -1;
 }
@@ -81,6 +149,10 @@ char * getOperationName(int name){
             return "LIT";
         case OPR:
             return "OPR";
+        case STO:
+            return "STO";
+        case INT:
+            return "INT";
     }
     return "";
 }

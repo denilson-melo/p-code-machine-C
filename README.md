@@ -8,8 +8,11 @@ The project is still in progress, for now it supports the following instructions
     - RTN   ``` OPR 0 0 ```
     - ADD   ``` OPR 0 2 ```
     - SUB   ``` OPR 0 3 ```
+    - MUL   ``` OPR 0 4 ```
+    - GTR   ``` OPR 0 12 ```
 - LOD
 - STO
+- CAL
 - INT
 - JMP
 - JPC

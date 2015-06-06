@@ -2,7 +2,7 @@
 An implementation of a simple P-code machine using C.
 
 # Available Instructions
-The projet is still in progress, for now it supports the following instructions:
+The project is still in progress, for now it supports the following instructions:
 - LIT
 - OPR
     - RTN   ``` OPR 0 0 ```
@@ -42,3 +42,8 @@ Subtracts 20 by 5 until gets to 0
 Sums 8+2
 
 If you want to create your own examples, try to follow the current format (no newlines or extra spacing), as it may not work properly. AND PAY ATTENTION TO INFITE LOOPS, luckly you can interrupt them witl CTRL + C.
+
+#Useful Links
+[A few p-code machine instructions](http://blackmesatech.com/2011/12/pl0/pl0.xhtml)
+[A few step-by-step p-code machine examples](http://blackmesatech.com/2011/12/pl0/index.xhtml)
+[Reference code](http://en.wikipedia.org/wiki/P-code_machine)

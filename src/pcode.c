@@ -10,7 +10,7 @@ int stackTop = 0;
 int programCounter = 0;
 struct instruction instructionRegister;
 char * instructionString[] = { "LIT", "OPR", "LOD", "STO", "CAL", "INT", "JMP", "JPC", "WRT" };
-char * operationString[] = { "RTN", "NEG", "ADD", "SUB", "MUL", "DIV" };
+char * operationString[] = { "RTN", "NEG", "ADD", "SUB", "MUL", "DIV", "ODD", "MOD", "EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ" };
 
 void run(){
     stack[1] = stack[2] = stack[3] = 0;
@@ -41,6 +41,13 @@ void executeInstruction(){
             stack[ getBase(instructionRegister.level) + instructionRegister.argument ] = stack[stackTop];
             stackTop--;
             break;
+        case CAL:
+            stack[stackTop+1] = getBase( instructionRegister.level );
+            stack[stackTop+2] = base;
+            stack[stackTop+3] = programCounter;
+            base = stackTop+1;
+            programCounter = instructionRegister.argument;
+            break;
         case INT:
             stackTop += instructionRegister.argument;
             break;
@@ -50,8 +57,8 @@ void executeInstruction(){
         case JPC:
             if ( stack[stackTop] == 0 ){
                 programCounter = instructionRegister.argument-1;
-                stackTop--;
             }
+            stackTop--;
             break;
         default:
             notImplemented( instructionRegister.operation,ERROR_INSTRUCTION_NOT_IMPLEMENTED, programCounter);
@@ -73,6 +80,14 @@ void stackOperation(){
             stackTop--;
             stack[stackTop] -= stack[stackTop+1];
             break;
+        case MUL:
+            stackTop--;
+            stack[stackTop] *= stack[stackTop+1];
+            break;
+        case GTR:
+            stackTop--;
+            stack[stackTop] = ( stack[stackTop] > stack[stackTop+1] );
+            break;
         default:
             notImplemented(instructionRegister.argument, ERROR_STACK_OPERATION_NOT_IMPLEMENTED, programCounter);
             break;
@@ -91,7 +106,7 @@ int getBase(int level){
 
 int getInstructionCode(char *str){
     int i = 0;
-    while ( i<9 ){
+    while ( i<INSTRUCTION_COUNT ){
         if ( strcmp(str,instructionString[i])==0 ){
             return i;
         }
@@ -102,14 +117,14 @@ int getInstructionCode(char *str){
 }
 
 char * getInstructionName(int code){
-    if ( code >= 0 && code <9 ){
+    if ( code >= 0 && code <INSTRUCTION_COUNT ){
         return instructionString[code];
     }
     return "UNKNOWN INSTRUCTION";
 }
 
 char * getOperationName(int code){
-    if ( code >= 0 && code <6 ){
+    if ( code >= 0 && code <OPERATION_COUNT ){
         return operationString[code];
     }
     return "UNKNOWN OPERATION";

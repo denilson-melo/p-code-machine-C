@@ -52,3 +52,6 @@ If you want to create your own examples, try to follow the current format (no ne
 [A few step-by-step p-code machine examples](http://blackmesatech.com/2011/12/pl0/index.xhtml)
 
 [Reference code](http://en.wikipedia.org/wiki/P-code_machine)
+
+[Another implementation](https://code.google.com/p/systems-software-cop3402-sum2011-amacdade-tstigliano/source/browse/pmachine.c)
+Could not run it, and found some errors, but I'm just using for some more coding references (good job btw).

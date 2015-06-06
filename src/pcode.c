@@ -1,8 +1,9 @@
 #include "pcode.h"
 #include "error.h"
 #include <string.h>
+#include <stdio.h>
 
-int stack[STACK_SIZE];
+int stack[STACK_SIZE] = { -1 };
 
 int base = 1;
 int stackTop = 0;
@@ -15,8 +16,10 @@ void run(){
     stack[1] = stack[2] = stack[3] = 0;
     
     while ( base > 0 ){
+        printStack();
         executeInstruction();
     }
+    printStack();
 }
 
 void executeInstruction(){
@@ -110,4 +113,37 @@ char * getOperationName(int code){
         return operationString[code];
     }
     return "UNKNOWN OPERATION";
+}
+
+void printStack(){
+    int i=1;
+    //Add spacing, to clear the prompt
+    for(i=0; i<20; i++){
+        printf("\n");
+    }
+    
+    //Prints the stack
+    for(i=1; i<=stackTop; i++){
+        printf("%d: %d", i, stack[i]);
+        if ( i==base ){
+            printf(" BASE");
+        }
+        if ( i==stackTop ){
+            printf(" TOP");
+        }
+        printf("\n");
+    }
+    //Prints the next instruction
+    if ( base == 0 ){
+        printf("Stack end: %d\n", stack[1]);
+    }else{
+        printf("Next instruction: %s %d %d\n", getInstructionName(instructions[programCounter].operation),
+                            instructions[programCounter].level,
+                            instructions[programCounter].argument);
+        
+        char temp;
+        printf("(press enter to continue)\n");
+        scanf("%c", &temp);
+    }
+    
 }

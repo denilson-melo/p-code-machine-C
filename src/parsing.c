@@ -20,7 +20,7 @@ void parseFile(){
     while ( (fscanf(fp, "%s", foperation)) != EOF ){
        fscanf(fp, "%d", &flevel);
        fscanf(fp, "%d", &fargument);
-       instructions[i].operation = getOperationCode(foperation);
+       instructions[i].operation = getInstructionCode(foperation);
        instructions[i].level = flevel;
        instructions[i].argument = fargument;
        codeLines++;

@@ -8,6 +8,8 @@ int base = 1;
 int stackTop = 0;
 int programCounter = 0;
 struct instruction instructionRegister;
+char * instructionString[] = { "LIT", "OPR", "LOD", "STO", "CAL", "INT", "JMP", "JPC", "WRT" };
+char * operationString[] = { "RTN", "NEG", "ADD", "SUB", "MUL", "DIV" };
 
 void run(){
     stack[1] = stack[2] = stack[3] = 0;
@@ -26,15 +28,11 @@ void executeInstruction(){
             stack[stackTop] = instructionRegister.argument;
             break;
         case OPR:
-            switch(instructionRegister.argument){
-                case 0: //RTN
-                    stackTop = base - 1;
-                    programCounter = stack[stackTop+3];
-                    base = stack[stackTop+2];
-                case 2: //ADD
-                    stackTop--;
-                    stack[stackTop] += stack[stackTop+1];
-            }
+            stackOperation();
+            break;
+        case LOD:
+            stackTop++;
+            stack[ stackTop ] = stack[ getBase(instructionRegister.level) + instructionRegister.argument ];
             break;
         case STO:
             stack[ getBase(instructionRegister.level) + instructionRegister.argument ] = stack[stackTop];
@@ -42,6 +40,38 @@ void executeInstruction(){
             break;
         case INT:
             stackTop += instructionRegister.argument;
+            break;
+        case JMP:
+            programCounter = instructionRegister.argument-1;
+            break;
+        case JPC:
+            if ( stack[stackTop] == 0 ){
+                programCounter = instructionRegister.argument-1;
+                stackTop--;
+            }
+            break;
+        default:
+            notImplemented( instructionRegister.operation,ERROR_INSTRUCTION_NOT_IMPLEMENTED, programCounter);
+    }
+}
+
+void stackOperation(){
+    switch(instructionRegister.argument){
+        case RTN:
+            stackTop = base - 1;
+            programCounter = stack[stackTop+3];
+            base = stack[stackTop+2];
+            break;
+        case ADD:
+            stackTop--;
+            stack[stackTop] += stack[stackTop+1];
+            break;
+        case SUB:
+            stackTop--;
+            stack[stackTop] -= stack[stackTop+1];
+            break;
+        default:
+            notImplemented(instructionRegister.argument, ERROR_STACK_OPERATION_NOT_IMPLEMENTED, programCounter);
             break;
     }
 }
@@ -56,33 +86,28 @@ int getBase(int level){
     return newBase;
 }
 
-int getOperationCode(char *str){
-    if ( strcmp(str,"LIT")==0 ){
-        return LIT;
-    }
-    if ( strcmp(str,"OPR")==0 ){
-        return OPR;
-    }
-    if ( strcmp(str,"STO")==0 ){
-        return STO;
-    }
-    if ( strcmp(str,"INT")==0 ){
-        return STO;
+int getInstructionCode(char *str){
+    int i = 0;
+    while ( i<9 ){
+        if ( strcmp(str,instructionString[i])==0 ){
+            return i;
+        }
+        i++;
     }
     error(ERROR_UNKNOWN_OPERATION);
     return -1;
 }
 
-char * getOperationName(int name){
-    switch (name){
-        case LIT:
-            return "LIT";
-        case OPR:
-            return "OPR";
-        case STO:
-            return "STO";
-        case INT:
-            return "INT";
+char * getInstructionName(int code){
+    if ( code >= 0 && code <9 ){
+        return instructionString[code];
     }
-    return "";
+    return "UNKNOWN INSTRUCTION";
+}
+
+char * getOperationName(int code){
+    if ( code >= 0 && code <6 ){
+        return operationString[code];
+    }
+    return "UNKNOWN OPERATION";
 }

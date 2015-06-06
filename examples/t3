@@ -1,0 +1,6 @@
+INT 0 3
+LIT 0 8
+LIT 0 2
+OPR 0 2
+STO 0 0
+OPR 0 0

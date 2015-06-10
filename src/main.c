@@ -24,7 +24,7 @@ int main(int argc, char ** argv){
     printf("Parsing file...");
     parseFile();
     printf(" Success.\n");
-    //printInstructions();
+    printInstructions();
     printf("Step by step execution:\n");
     char temp;
     printf("(press enter to continue)\n");

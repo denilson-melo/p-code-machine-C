@@ -57,8 +57,8 @@ void executeInstruction(){
         case JPC:
             if ( stack[stackTop] == 0 ){
                 programCounter = instructionRegister.argument-1;
+                stackTop--;
             }
-            stackTop--;
             break;
         default:
             notImplemented( instructionRegister.operation,ERROR_INSTRUCTION_NOT_IMPLEMENTED, programCounter);

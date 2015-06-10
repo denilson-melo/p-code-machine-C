@@ -8,8 +8,11 @@ The project is still in progress, for now it supports the following instructions
     - RTN   ``` OPR 0 0 ```
     - ADD   ``` OPR 0 2 ```
     - SUB   ``` OPR 0 3 ```
+    - MUL   ``` OPR 0 4 ```
+    - GTR   ``` OPR 0 12 ```
 - LOD
 - STO
+- CAL
 - INT
 - JMP
 - JPC
@@ -49,3 +52,6 @@ If you want to create your own examples, try to follow the current format (no ne
 [A few step-by-step p-code machine examples](http://blackmesatech.com/2011/12/pl0/index.xhtml)
 
 [Reference code](http://en.wikipedia.org/wiki/P-code_machine)
+
+[Another implementation](https://code.google.com/p/systems-software-cop3402-sum2011-amacdade-tstigliano/source/browse/pmachine.c)
+Could not run it, and found some errors, but I'm just using for some more coding references (good job btw).

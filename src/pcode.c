@@ -90,6 +90,10 @@ void stackOperation(){
 			stackTop--;
 			stack[stackTop] *= stack[stackTop+1];
 			break;
+		case NEQ:
+			stackTop--;
+			stack[stackTop] = ( stack[stackTop] != stack[stackTop+1] );
+			break;
 		case GTR:
 			stackTop--;
 			stack[stackTop] = ( stack[stackTop] > stack[stackTop+1] );

@@ -1,2 +1,2 @@
 machinemake: 
-	gcc -o main src/main.c src/parsing.c src/pcode.c src/error.c -Wall
+	gcc -o pcode src/main.c src/parsing.c src/pcode.c src/error.c -Wall

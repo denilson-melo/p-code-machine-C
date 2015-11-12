@@ -15,7 +15,7 @@ struct instruction{
 };
 extern struct instruction instructions[];
 
-void run();
+void run(int);
 void executeInstruction();
 void stackOperation();
 int getBase(int);
@@ -23,5 +23,6 @@ int getInstructionCode(char *);
 char * getInstructionName(int);
 char * getOperationName(int);
 void printStack();
+void printResult();
 
 #endif
